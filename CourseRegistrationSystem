@@ -1,0 +1,201 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Course {
+    private String code;
+    private String title;
+    private String description;
+    private int capacity;
+    private String schedule;
+
+    public Course(String code, String title, String description, int capacity, String schedule) {
+        this.code = code;
+        this.title = title;
+        this.description = description;
+        this.capacity = capacity;
+        this.schedule = schedule;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Course Code: %s\nTitle: %s\nDescription: %s\nCapacity: %d\nSchedule: %s",
+                             code, title, description, capacity, schedule);
+    }
+}
+
+class Student {
+    private int studentId;
+    private String name;
+    private List<Course> registeredCourses;
+
+    public Student(int studentId, String name) {
+        this.studentId = studentId;
+        this.name = name;
+        this.registeredCourses = new ArrayList<>();
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Course> getRegisteredCourses() {
+        return registeredCourses;
+    }
+
+    public void registerCourse(Course course) {
+        registeredCourses.add(course);
+    }
+
+    public void dropCourse(Course course) {
+        registeredCourses.remove(course);
+    }
+}
+
+class CourseDatabase {
+    private List<Course> courses;
+
+    public CourseDatabase() {
+        this.courses = new ArrayList<>();
+    }
+
+    public void addCourse(Course course) {
+        courses.add(course);
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+}
+
+class StudentDatabase {
+    private List<Student> students;
+
+    public StudentDatabase() {
+        this.students = new ArrayList<>();
+    }
+
+    public void addStudent(Student student) {
+        students.add(student);
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+}
+
+public class CourseRegistrationSystem {
+    public static void main(String[] args) {
+        CourseDatabase courseDatabase = new CourseDatabase();
+        StudentDatabase studentDatabase = new StudentDatabase();
+
+        // Adding sample courses to the course database
+        Course course1 = new Course("CSE101", "Introduction to Computer Science", "Fundamentals of programming", 30, "Mon/Wed/Fri 10:00 AM");
+        Course course2 = new Course("MAT201", "Calculus I", "Limits, derivatives, and integrals", 25, "Tue/Thu 2:00 PM");
+        courseDatabase.addCourse(course1);
+        courseDatabase.addCourse(course2);
+
+        // Adding sample student to the student database
+        Student student1 = new Student(1001, "John Doe");
+        studentDatabase.addStudent(student1);
+
+        // Course Listing
+        System.out.println("Available Courses:");
+        for (Course course : courseDatabase.getCourses()) {
+            System.out.println(course);
+            System.out.println("------------------------------");
+        }
+
+        // Student Registration
+        System.out.println("\nStudent Registration:");
+        System.out.print("Enter student ID: ");
+        int studentId = new Scanner(System.in).nextInt();
+        Student currentStudent = findStudentById(studentDatabase, studentId);
+
+        if (currentStudent != null) {
+            System.out.print("Enter course code to register: ");
+            String courseCode = new Scanner(System.in).next();
+
+            Course selectedCourse = findCourseByCode(courseDatabase, courseCode);
+
+            if (selectedCourse != null && currentStudent.getRegisteredCourses().size() < 3) {
+                currentStudent.registerCourse(selectedCourse);
+                System.out.println("Registration successful.");
+            } else {
+                System.out.println("Invalid course code or student has reached the maximum number of registered courses.");
+            }
+        } else {
+            System.out.println("Student not found.");
+        }
+
+        // Display updated student's registered courses
+        System.out.println("\nUpdated Registered Courses:");
+        for (Course course : currentStudent.getRegisteredCourses()) {
+            System.out.println(course);
+            System.out.println("------------------------------");
+        }
+
+        // Course Removal
+        System.out.println("\nCourse Removal:");
+        System.out.print("Enter course code to drop: ");
+        String courseCodeToRemove = new Scanner(System.in).next();
+
+        Course courseToRemove = findCourseByCode(courseDatabase, courseCodeToRemove);
+
+        if (courseToRemove != null) {
+            currentStudent.dropCourse(courseToRemove);
+            System.out.println("Course dropped successfully.");
+        } else {
+            System.out.println("Course not found.");
+        }
+
+        // Display final updated student's registered courses
+        System.out.println("\nFinal Registered Courses:");
+        for (Course course : currentStudent.getRegisteredCourses()) {
+            System.out.println(course);
+            System.out.println("------------------------------");
+        }
+    }
+
+    private static Student findStudentById(StudentDatabase studentDatabase, int studentId) {
+        for (Student student : studentDatabase.getStudents()) {
+            if (student.getStudentId() == studentId) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    private static Course findCourseByCode(CourseDatabase courseDatabase, String courseCode) {
+        for (Course course : courseDatabase.getCourses()) {
+            if (course.getCode().equals(courseCode)) {
+                return course;
+            }
+        }
+        return null;
+    }
+}
