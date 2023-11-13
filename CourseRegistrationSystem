@@ -113,24 +113,20 @@ public class CourseRegistrationSystem {
         CourseDatabase courseDatabase = new CourseDatabase();
         StudentDatabase studentDatabase = new StudentDatabase();
 
-        // Adding sample courses to the course database
         Course course1 = new Course("CSE101", "Introduction to Computer Science", "Fundamentals of programming", 30, "Mon/Wed/Fri 10:00 AM");
         Course course2 = new Course("MAT201", "Calculus I", "Limits, derivatives, and integrals", 25, "Tue/Thu 2:00 PM");
         courseDatabase.addCourse(course1);
         courseDatabase.addCourse(course2);
 
-        // Adding sample student to the student database
         Student student1 = new Student(1001, "John Doe");
         studentDatabase.addStudent(student1);
 
-        // Course Listing
         System.out.println("Available Courses:");
         for (Course course : courseDatabase.getCourses()) {
             System.out.println(course);
             System.out.println("------------------------------");
         }
 
-        // Student Registration
         System.out.println("\nStudent Registration:");
         System.out.print("Enter student ID: ");
         int studentId = new Scanner(System.in).nextInt();
@@ -152,14 +148,12 @@ public class CourseRegistrationSystem {
             System.out.println("Student not found.");
         }
 
-        // Display updated student's registered courses
         System.out.println("\nUpdated Registered Courses:");
         for (Course course : currentStudent.getRegisteredCourses()) {
             System.out.println(course);
             System.out.println("------------------------------");
         }
 
-        // Course Removal
         System.out.println("\nCourse Removal:");
         System.out.print("Enter course code to drop: ");
         String courseCodeToRemove = new Scanner(System.in).next();
@@ -173,7 +167,6 @@ public class CourseRegistrationSystem {
             System.out.println("Course not found.");
         }
 
-        // Display final updated student's registered courses
         System.out.println("\nFinal Registered Courses:");
         for (Course course : currentStudent.getRegisteredCourses()) {
             System.out.println(course);
